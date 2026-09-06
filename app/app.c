@@ -180,6 +180,33 @@ static void CheckForIncoming(void)
     }
 }
 
+#ifdef ENABLE_TX_WHEN_AM
+uint8_t calculateRFSignalPower(uint8_t amplitude, uint8_t maxPower, uint8_t carrierPercentage) 
+{
+  if (carrierPercentage == 0) {
+    return (uint8_t)((amplitude * maxPower) / 255);
+  }
+  uint8_t carrierAmplitude = (carrierPercentage * maxPower) / 100;
+  uint8_t modulationDepth = maxPower - carrierAmplitude;
+  return carrierAmplitude + (modulationDepth * amplitude / 255);
+}
+
+static void HandleTransmit(void)
+{
+    if (gCurrentVfo->Modulation == MODULATION_USB || gCurrentVfo->Modulation == MODULATION_AM) {
+        uint8_t val = BK4819_GetVoiceAmplitudeOut() >> 7;
+        if (gCurrentVfo->Modulation == MODULATION_USB) {
+            val = calculateRFSignalPower(val, gCurrentVfo->TXP_CalculatedSetting, 0);
+        }
+        else {
+            val = calculateRFSignalPower(val, gCurrentVfo->TXP_CalculatedSetting, 50);
+        }
+        BK4819_SetupPowerAmplifier(val, gCurrentVfo->pTX->Frequency);
+    }
+
+}
+#endif
+
 static void HandleIncoming(void)
 {
     if (!g_SquelchLost) {   // squelch is closed
@@ -482,7 +509,11 @@ static void HandlePowerSave()
 
 static void (*HandleFunction_fn_table[])(void) = {
     [FUNCTION_FOREGROUND] = &CheckForIncoming,
+#ifdef ENABLE_TX_WHEN_AM
+    [FUNCTION_TRANSMIT] = &HandleTransmit,
+#else
     [FUNCTION_TRANSMIT] = &FUNCTION_NOP,
+#endif
     [FUNCTION_MONITOR] = &FUNCTION_NOP,
     [FUNCTION_INCOMING] = &HandleIncoming,
     [FUNCTION_RECEIVE] = &HandleReceive,
@@ -991,7 +1022,9 @@ void APP_Update(void)
     if (gReducedService)
         return;
 
+#ifndef ENABLE_TX_WHEN_AM
     if (gCurrentFunction != FUNCTION_TRANSMIT)
+#endif
         HandleFunction();
 
 #ifdef ENABLE_FMRADIO

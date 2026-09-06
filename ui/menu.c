@@ -49,6 +49,11 @@ const t_menu_item MenuList[] =
     {"RxCTCS",      MENU_R_CTCS        }, // was "R_CTCS"
     {"TxDCS",       MENU_T_DCS         }, // was "T_DCS"
     {"TxCTCS",      MENU_T_CTCS        }, // was "T_CTCS"
+#ifdef ENABLE_DEVIATION
+	{"DevFM",       MENU_DEV_FM        },
+	{"DevAM",       MENU_DEV_AM        },
+	{"DevSSB",      MENU_DEV_SSB       },
+#endif
     {"TxODir",      MENU_SFT_D         }, // was "SFT_D"
     {"TxOffs",      MENU_OFFSET        }, // was "OFFSET"
     {"W/N",         MENU_W_N           },
@@ -670,6 +675,19 @@ void UI_DisplayMenu(void)
                 sprintf(String, "%u.%uHz", CTCSS_Options[gSubMenuSelection - 1] / 10, CTCSS_Options[gSubMenuSelection - 1] % 10);
             break;
         }
+
+#ifdef ENABLE_DEVIATION
+		case MENU_DEV_FM:
+		case MENU_DEV_AM:
+		case MENU_DEV_SSB:
+		{
+			if (gSubMenuSelection == 0)
+				strcpy(String, "OFF");
+			else
+				sprintf(String, "%d", gSubMenuSelection);
+			break;	
+		}
+#endif
 
         case MENU_SFT_D:
             strcpy(String, gSubMenu_SFT_D[gSubMenuSelection]);

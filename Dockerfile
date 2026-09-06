@@ -19,6 +19,3 @@ RUN apk add --no-cache \
 
 # Project workspace
 WORKDIR /app
-
-# Copy sources into the image (the script mounts the repo and runs builds)
-COPY . .
