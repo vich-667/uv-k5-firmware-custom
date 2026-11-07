@@ -39,11 +39,11 @@ case "$1" in
     dockerprepare) prepare ;;
     dockerclean) clean ;;
     build) run make ;;
+    clean) run make clean ;;
     help)
         echo "Usage: $0 {prepare|clean|build|\"cmd\"}"
         exit 1
         ;;
     *)
         run $*
-        ;;
 esac
