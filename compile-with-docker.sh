@@ -22,13 +22,8 @@ prepare () {
 
 clean() {
     echo "🧽 Cleaning all"
-    docker rmi "$IMAGE_NAME" 2>/dev/null || true
-    docker buildx prune -f || true
-    # Optional: if you use buildx history tooling
-    if command -v docker >/dev/null 2>&1 && docker buildx help history >/dev/null 2>&1; then
-      docker buildx history ls | awk 'NR>1 {print $1}' | xargs docker buildx history rm || true
-    fi
     make clean || true
+    docker rmi "$IMAGE_NAME" 2>/dev/null || true
 }
 
 # ------------------ BUILD VARIANTS ------------------
@@ -41,8 +36,8 @@ run() {
 # ------------------ MENU ------------------
 
 case "$1" in
-    prepare) prepare ;;
-    clean) clean ;;
+    dockerprepare) prepare ;;
+    dockerclean) clean ;;
     build) run make ;;
     help)
         echo "Usage: $0 {prepare|clean|build|\"cmd\"}"

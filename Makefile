@@ -6,7 +6,7 @@
 # ---- STOCK QUANSHENG FEATURES ----
 ENABLE_FMRADIO                  ?= 1
 ENABLE_UART                     ?= 1
-ENABLE_AIRCOPY                  ?= 1 #do7htl remove?
+ENABLE_AIRCOPY                  ?= 1 #dm7rt remove?
 ENABLE_NOAA                     ?= 0
 ENABLE_VOICE                    ?= 0
 ENABLE_VOX                      ?= 1
@@ -40,7 +40,9 @@ ENABLE_REDUCE_LOW_MID_TX_POWER  ?= 0
 ENABLE_BYP_RAW_DEMODULATORS     ?= 0
 ENABLE_BLMIN_TMP_OFF            ?= 0
 ENABLE_SCAN_RANGES              ?= 1
-ENABLE_DEVIATION                ?= 1
+
+# Unclear it it makes sense
+ENABLE_DEVIATION                ?= 0
 
 # ---- CONTRIB MODS ----
 
@@ -242,7 +244,7 @@ endif
 OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
-AUTHOR_STRING ?= DO7HTL
+AUTHOR_STRING ?= DM7RT
 VERSION_STRING ?= v4.4
 EDITION_STRING ?= Custom
 
